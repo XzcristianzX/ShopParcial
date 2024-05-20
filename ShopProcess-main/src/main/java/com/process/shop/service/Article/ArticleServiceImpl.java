@@ -1,12 +1,11 @@
 package com.process.shop.service.Article;
 // ArticleRepository.java
 import com.process.shop.model.Article;
-import com.process.shop.model.Category;
 import com.process.shop.repository.ArticleRepository;
-import com.process.shop.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,11 +17,11 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public Article createArticle(Article article) {
-        /*// Verificar si la categoría ya tiene algún artículo asociado
-        if (article.getCategory() != null && article.getCategory().getArticles() != null
-                && !article.getCategory().getArticles().isEmpty()) {
-            throw new RuntimeException("La categoría ya tiene un artículo asociado. Solo se permite un artículo por categoría.");
-        }*/
+        article.setCreatedAt(LocalDateTime.now());
+        Optional<Article> existingCategory = articleRepository.findByName(article.getName());
+        if (existingCategory.isPresent()) {
+            throw new RuntimeException("El articulo ya está registrado");
+        }
         return articleRepository.save(article);
     }
 
@@ -47,6 +46,9 @@ public class ArticleServiceImpl implements ArticleService {
         existingCategory.setName(articleUpdated.getName());
         existingCategory.setDescription(articleUpdated.getDescription());
         existingCategory.setPrice(articleUpdated.getPrice());
+        existingCategory.setStock(articleUpdated.getStock());
+        existingCategory.setManufactureDate(articleUpdated.getManufactureDate());
+        existingCategory.setUpdatedAt(LocalDateTime.now());
         return articleRepository.save(existingCategory);
     }
     @Override

@@ -16,7 +16,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(User user) {
-
+        Optional<User> existingUser = userRepository.findByCc(user.getCc());
+        if (existingUser.isPresent()) {
+            throw new RuntimeException("El numero de documento ya existe.");
+        }
         return userRepository.save(user);
     }
 

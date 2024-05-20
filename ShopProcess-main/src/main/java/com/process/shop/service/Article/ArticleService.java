@@ -2,7 +2,6 @@ package com.process.shop.service.Article;
 
 // ArticleService.java
 import com.process.shop.model.Article;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 

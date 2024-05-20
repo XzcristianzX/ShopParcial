@@ -2,11 +2,11 @@ package com.process.shop.service.Category;
 
 // CategoryServiceImpl.java
 import com.process.shop.model.Category;
-import com.process.shop.model.User;
 import com.process.shop.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 @Service
@@ -24,6 +24,7 @@ public class CategoryServiceImpl implements CategoryService {
             // Si la categoría ya existe, no se crea una nueva
             throw new RuntimeException("La categoría ya existe.");
         }
+        category.setCreatedAt(LocalDateTime.now());
         return categoryRepository.save(category);
     }
 
@@ -47,6 +48,8 @@ public class CategoryServiceImpl implements CategoryService {
         }
         Category existingCategory = categoryBd.get();
         existingCategory.setName(categoryUpdated.getName());
+        existingCategory.setDescription(categoryUpdated.getDescription());
+        existingCategory.setUpdatedAt(LocalDateTime.now());
         return categoryRepository.save(existingCategory);
     }
 

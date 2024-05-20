@@ -2,10 +2,16 @@ package com.process.shop.controller;
 
 // CategoryController.java
 import com.process.shop.model.Category;
+import com.process.shop.model.dto.Response;
 import com.process.shop.service.Category.CategoryService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -16,12 +22,20 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @PostMapping
-    public Category createCategory(@RequestBody Category category) {
-        return categoryService.createCategory(category);
+    public ResponseEntity<Response> createCategory(@RequestBody @Valid Category category) {
+        categoryService.createCategory(category);
+        Response response = Response.builder()
+                .responseMessage(Response.ResponseMessage.builder()
+                        .date(LocalDate.now())
+                        .message(List.of("Categoria creada con éxito"))
+                        .statusCode(HttpStatus.CREATED.value())
+                        .build())
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    public Category getCategoryById(@PathVariable Long id) {
+    public Category getCategoryById(@PathVariable @NotNull Long id) {
         return categoryService.getCategoryById(id);
     }
 
@@ -31,8 +45,16 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
-    public Category updateCategory(@RequestBody Category category, @PathVariable Long id) {
-        return categoryService.updateCategory(category, id);
+    public ResponseEntity<Response> updateCategory(@RequestBody @Valid Category category, @PathVariable Long id) {
+        categoryService.updateCategory(category, id);
+        Response response = Response.builder()
+                .responseMessage(Response.ResponseMessage.builder()
+                        .date(LocalDate.now())
+                        .message(List.of("Categoria actualizada con éxito"))
+                        .statusCode(HttpStatus.CREATED.value())
+                        .build())
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable Long id) {
