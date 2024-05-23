@@ -1,8 +1,7 @@
 package com.process.shop.service.Article;
-// ArticleRepository.java
+
 import com.process.shop.model.Article;
 import com.process.shop.repository.ArticleRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -12,8 +11,11 @@ import java.util.Optional;
 @Service
 public class ArticleServiceImpl implements ArticleService {
 
-    @Autowired
-    private ArticleRepository articleRepository;
+    private final ArticleRepository articleRepository;
+
+    public ArticleServiceImpl(ArticleRepository articleRepository) {
+        this.articleRepository = articleRepository;
+    }
 
     @Override
     public Article createArticle(Article article) {
@@ -36,11 +38,11 @@ public class ArticleServiceImpl implements ArticleService {
         return (List<Article>) articleRepository.findAll();
     }
 
+    @Override
     public Article updateArticle(Article articleUpdated, Long id) {
         Optional<Article> articleBd = articleRepository.findById(id);
         if (articleBd.isEmpty()) {
             throw new IllegalArgumentException("El artículo no existe");
-
         }
         Optional<Article> articleByName = articleRepository.findByName(articleUpdated.getName());
         if (articleByName.isPresent() && !articleByName.get().getId().equals(id)) {
@@ -56,9 +58,9 @@ public class ArticleServiceImpl implements ArticleService {
         existingArticle.setUpdatedAt(LocalDateTime.now());
         return articleRepository.save(existingArticle);
     }
+
     @Override
     public void deleteArticle(Long id) {
         articleRepository.deleteById(id);
     }
-
 }

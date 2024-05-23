@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.process.shop.service.Category.CategoryServiceImplTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2024-05-23T19:47:18" hostname="DESKTOP-05BECJ8" time="0.854">
+  <properties/>
+  <testcase name="deleteCategory()" classname="com.process.shop.service.Category.CategoryServiceImplTest" time="0.815"/>
+  <testcase name="getAllCategories()" classname="com.process.shop.service.Category.CategoryServiceImplTest" time="0.007"/>
+  <testcase name="updateCategory()" classname="com.process.shop.service.Category.CategoryServiceImplTest" time="0.012"/>
+  <testcase name="createCategory()" classname="com.process.shop.service.Category.CategoryServiceImplTest" time="0.005"/>
+  <testcase name="getCategoryById()" classname="com.process.shop.service.Category.CategoryServiceImplTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
