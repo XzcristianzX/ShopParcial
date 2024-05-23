@@ -1,16 +1,16 @@
-package com.process.shop.service.Category;
+package com.process.shop.service.categoriaTest;
 
 // CategoryServiceImpl.java
-import com.process.shop.model.Article;
 import com.process.shop.model.Category;
-import com.process.shop.repository.ArticleRepository;
 import com.process.shop.repository.CategoryRepository;
+import com.process.shop.service.Category.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+
 @Service
 
 public class CategoryServiceImpl implements CategoryService {
@@ -46,11 +46,7 @@ public class CategoryServiceImpl implements CategoryService {
     public Category updateCategory(Category categoryUpdated, Long id) {
         Optional<Category> categoryBd = categoryRepository.findById(id);
         if (categoryBd.isEmpty()) {
-            return null;
-        }
-        Optional<Category> categoryByName = categoryRepository.findByName(categoryUpdated.getName());
-        if (categoryByName.isPresent() && !categoryByName.get().getId().equals(id)) {
-            throw new IllegalArgumentException("La categoría ya existe con ese nombre");
+            return null; // Usuario no encontrado, puedes manejarlo como desees
         }
         Category existingCategory = categoryBd.get();
         existingCategory.setName(categoryUpdated.getName());
@@ -59,16 +55,8 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryRepository.save(existingCategory);
     }
 
+    @Override
     public void deleteCategory(Long id) {
-        Optional<Category> categoryOpt = categoryRepository.findById(id);
-        if (categoryOpt.isPresent()) {
-            Category category = categoryOpt.get();
-            if (!category.getArticle().isEmpty()) {
-                throw new IllegalArgumentException("Primero borra los artículos de esta categoría");
-            }
-            categoryRepository.deleteById(id);
-        } else {
-            throw new IllegalArgumentException("Categoría no encontrada");
-        }
+        categoryRepository.deleteById(id);
     }
 }

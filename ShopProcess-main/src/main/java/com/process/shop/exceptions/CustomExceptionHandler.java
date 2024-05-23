@@ -24,8 +24,8 @@ public class CustomExceptionHandler {
         return new ResponseEntity<>(
                 Response.builder()
                         .responseMessage(Response.ResponseMessage.builder()
-                                .date(LocalDate.now())
-                                .message(List.of(notFoundException.getMessage()))
+                                .date(String.valueOf(LocalDate.now()))
+                                .message(String.valueOf(List.of(notFoundException.getMessage())))
                                 .statusCode(HttpStatus.NOT_FOUND.value())
                                 .build())
                         .build(),
@@ -38,8 +38,8 @@ public class CustomExceptionHandler {
         return new ResponseEntity<>(
                 Response.builder()
                         .responseMessage(Response.ResponseMessage.builder()
-                                .date(LocalDate.now())
-                                .message(List.of(alreadyExistsException.getMessage()))
+                                .date(String.valueOf(LocalDate.now()))
+                                .message(String.valueOf(List.of(alreadyExistsException.getMessage())))
                                 .statusCode(HttpStatus.CONFLICT.value())
                                 .build())
                         .build(),
@@ -57,8 +57,8 @@ public class CustomExceptionHandler {
         return new ResponseEntity<>(
                 Response.builder()
                         .responseMessage(Response.ResponseMessage.builder()
-                                .date(LocalDate.now())
-                                .message(errors)
+                                .date(String.valueOf(LocalDate.now()))
+                                .message(String.valueOf(errors))
                                 .statusCode(HttpStatus.BAD_REQUEST.value())
                                 .build())
                         .build(),
@@ -73,8 +73,8 @@ public class CustomExceptionHandler {
         return new ResponseEntity<>(
                 Response.builder()
                         .responseMessage(Response.ResponseMessage.builder()
-                                .date(LocalDate.now())
-                                .message(List.of(errorMessage))
+                                .date(String.valueOf(LocalDate.now()))
+                                .message(String.valueOf(List.of(errorMessage)))
                                 .statusCode(HttpStatus.BAD_REQUEST.value())
                                 .build())
                         .build(),
@@ -85,8 +85,8 @@ public class CustomExceptionHandler {
     public ResponseEntity<Response> handleGenericException(Exception ex) {
         Response response = Response.builder()
                 .responseMessage(Response.ResponseMessage.builder()
-                        .date(LocalDate.now())
-                        .message(List.of(ex.getMessage()))
+                        .date(String.valueOf(LocalDate.now()))
+                        .message(String.valueOf(List.of(ex.getMessage())))
                         .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
                         .build())
                 .build();

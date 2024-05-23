@@ -10,13 +10,13 @@ import java.util.List;
 @Data
 public class Response {
     private ResponseMessage responseMessage;
+    private Object data; // Campo para los datos adicionales
 
     @Data
     @Builder
     public static class ResponseMessage {
-        private LocalDate date;
-        private List<String> message;
+        private String date;
+        private String message;
         private int statusCode;
     }
-
 }
