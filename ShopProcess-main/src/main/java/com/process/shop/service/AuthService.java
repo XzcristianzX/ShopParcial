@@ -11,7 +11,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -20,7 +19,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthService {
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
     private final JWTservice jwTservice;
     private final AuthenticationManager authenticationManager;
 
@@ -35,14 +33,18 @@ public class AuthService {
             throw new AuthenticationFailedException("Authentication failed: " + e.getMessage());
         }
 
-        Optional<User> user = userRepository.findByEmail(authRequest.getEmail());
+        Optional<User> userOptional = userRepository.findByEmail(authRequest.getEmail());
 
-        if (user.isEmpty()) {
+        if (userOptional.isEmpty()) {
             throw new AuthenticationFailedException("User not found");
         }
 
-        UserDetails userDetails = user.get();
-        String token = jwTservice.getToken(userDetails);
+        User user = userOptional.get();
+        String token = jwTservice.getToken(user);
+
+        // Guardar el token actual en el usuario
+        user.setCurrentToken(token);
+        userRepository.save(user);
 
         return AuthRequest.builder()
                 .token(token)

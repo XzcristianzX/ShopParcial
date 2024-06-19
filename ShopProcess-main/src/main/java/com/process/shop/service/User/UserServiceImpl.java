@@ -3,6 +3,7 @@ package com.process.shop.service.User;
 import com.process.shop.model.User;
 import com.process.shop.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,13 +15,15 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
-
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     @Override
     public User createUser(User user) {
         Optional<User> existingUser = userRepository.findByCc(user.getCc());
         if (existingUser.isPresent()) {
             throw new RuntimeException("El numero de documento ya existe.");
-        }
+        }String encodedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
         return userRepository.save(user);
     }
 

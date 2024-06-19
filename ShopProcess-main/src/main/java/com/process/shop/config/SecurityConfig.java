@@ -1,5 +1,6 @@
 package com.process.shop.config;
 
+import com.process.shop.exceptions.CustomAuthenticationEntryPoint;
 import com.process.shop.exceptions.NotFoundException;
 import com.process.shop.filter.JwtAuthenticationFilter;
 import com.process.shop.model.enunm.ErrorMessages;
@@ -31,6 +32,7 @@ import org.springframework.web.filter.CorsFilter;
 public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final UserRepository userRepository;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
 
     @Bean
@@ -46,9 +48,7 @@ public class SecurityConfig {
                     authorize.anyRequest().authenticated();  // Proteger todas las demás rutas
                 })
                 .exceptionHandling(exceptionHandling ->
-                        exceptionHandling.authenticationEntryPoint((request, response, authException) -> {
-                            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
-                        })
+                        exceptionHandling.authenticationEntryPoint(customAuthenticationEntryPoint)
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new CorsFilter(corsConfigurationSource()), ChannelProcessingFilter.class)
@@ -66,6 +66,12 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public UserDetailsService userDetailService() {
+        return email -> userRepository.findByEmail(email).orElseThrow(() ->
+                new NotFoundException(ErrorMessages.CREDENTIAL_INVALID.getMessage()));
     }
 
     @Bean

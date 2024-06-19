@@ -17,19 +17,20 @@ import java.util.Map;
 @Service
 public class JWTservice {
     private static final String SECRET_KEY = "2208153513d489a979265575aa0dfd5bed7bd9588981bb60f4a5e19d02614433";
-    private static final long accessTokenValidity = 60*60*1000;//3600 mls = 1 Hora
-    public String getToken(UserDetails user){
+    private static final long accessTokenValidity = 60 * 60 * 1000; // 3600 mls = 1 Hora
+
+    public String getToken(UserDetails user) {
         return getToken(new HashMap<>(), user);
     }
 
-    private String getToken(Map<String, Object> extraClaims, UserDetails user){
-        return Jwts.builder().
-                setClaims(extraClaims).
-                setSubject(user.getUsername()).
-                setIssuedAt(new Date(System.currentTimeMillis())).
-                setExpiration(new Date(System.currentTimeMillis() + accessTokenValidity)).
-                signWith(Keys.hmacShaKeyFor(SECRET_KEY.getBytes())).
-                compact();
+    private String getToken(Map<String, Object> extraClaims, UserDetails user) {
+        return Jwts.builder()
+                .setClaims(extraClaims)
+                .setSubject(user.getUsername())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + accessTokenValidity))
+                .signWith(Keys.hmacShaKeyFor(SECRET_KEY.getBytes()))
+                .compact();
     }
 
     public static UsernamePasswordAuthenticationToken getAuthentication(String token) throws AuthenticationFailedException {
@@ -47,6 +48,18 @@ public class JWTservice {
             throw new AuthenticationFailedException(e.getMessage());
         }
     }
+
+    // Nuevo método para extraer el email del token
+    public String getEmailFromToken(String token) {
+        try {
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(SECRET_KEY.getBytes())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+            return claims.getSubject();
+        } catch (JwtException e) {
+            throw new AuthenticationFailedException("Failed to extract email from token: " + e.getMessage());
+        }
+    }
 }
-
-
